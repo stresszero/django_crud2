@@ -27,9 +27,47 @@ class AddDog(View):
 
 class OwnerView(View):
     def get(self, request):
-        pass
+        owners = Owner.objects.all()
+        results = []
+        for owner in owners:
+            results.append(
+                {
+                    "이름": owner.name,
+                    "이메일": owner.email,
+                    "나이": owner.age,
+                }
+            )
+        return JsonResponse({'results': results}, status=200)
 
 
 class DogView(View):
     def get(self, request):
-        pass
+        dogs = Dog.objects.all()
+        results = []
+        for dog in dogs:
+            results.append(
+                {
+                    "이름": dog.name,
+                    "나이": dog.age,
+                    "주인이름": dog.owner.name,
+                }
+            )
+        return JsonResponse({'results': results}, status=200)
+
+
+class OwnerDogView(View):
+    def get(self, request):
+
+        owners = Owner.objects.all()
+        dogs = Dog
+        results = []
+        for owner in owners:
+            results.append(
+                {
+                    "이름": owner.name,
+                    "이메일": owner.email,
+                    "나이": owner.age,
+                    "키우는 강아지(이름, 나이)": dict(dogs.objects.values_list('name', 'age').filter(owner_id=owner.id))
+                }
+            )
+        return JsonResponse({'results': results}, status=200)
